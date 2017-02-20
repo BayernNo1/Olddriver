@@ -9,6 +9,7 @@
 //-------------------------------------------------------------------------*
 #include "MK60N512VMD100.h "
 #include "includes.h"
+extern struct CCD CCD1;
 
 //-------------------------------------------------------------------------*
 //函数名: PIT0_isr                                                        *
@@ -22,6 +23,11 @@ void PIT0_isr(void)
   {
     PIT_TFLG(0) |= PIT_TFLG_TIF_MASK; //清中断标志
   }
+  static int cnt = 0;
+  cnt++;
+  if (cnt == 12) cnt = 0;
+  if (cnt == 8)
+    findline(&CCD1,1);
   enable_pit_interrupt(PIT0);
 }
 
@@ -78,7 +84,7 @@ static int count_time = 0;
   filter(&CCD1);
   char test_filter_1[] = "post";
   char test_filter_2[] = "pre";    
-  /*2017年2月19日测试filter，拨码开关2控制发送蓝牙是滤波前还是滤波后*/
+  //2017年2月19日测试filter，拨码开关2控制发送蓝牙是滤波前还是滤波后
   if(BO_num[2] == 0){
    for(j = 0 ;j < 128; j++){
       uart_send1(FreeCarsUARTPort, (CCD1.filter_data[j]));
@@ -93,6 +99,16 @@ static int count_time = 0;
    uart_send1(FreeCarsUARTPort,0xff); 
    LCD_P8x16Str(0,4,test_filter_2);  
   }
+  
+  // 2017-2-20测试findline：OLED发送检测到的赛道边界
+  char test_edge[] = "l = 000 r = 000";
+  test_edge[4] = '0'+CCD1.left/100;
+  test_edge[5] = '0'+(CCD1.left/10)%10;
+  test_edge[6] = '0'+CCD1.left%10;
+  test_edge[12]= '0'+CCD1.right/100; 
+  test_edge[13]= '0'+(CCD1.right/10)%10;
+  test_edge[14]= '0'+CCD1.right%10;
+  LCD_P8x16Str(0,6,test_edge);  
   
   //蓝牙停车
  /* if(uart_re1(UART2,&emergency_stop))

@@ -225,6 +225,9 @@
           <name>$PROJ_DIR$\src\Sources\C\filter.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\src\Sources\C\findline.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\src\Sources\C\Flash.c</name>
         </file>
         <file>
@@ -268,6 +271,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\src\Sources\H\filter.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\src\Sources\H\findline.h</name>
         </file>
         <file>
           <name>$PROJ_DIR$\src\Sources\H\Flash.h</name>
