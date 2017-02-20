@@ -101,4 +101,5 @@ void findline(struct CCD *ccd,int num)
   //ÁÙÊ±²âÊÔÊ¹ÓÃ
   ccd->left = leftedge_max;
   ccd->right = rightedge_max;
+  ccd->center = (ccd->left + ccd->right) / 2;
 }

@@ -1942,6 +1942,9 @@
           <name>$PROJ_DIR$\src\Sources\C\common.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$\src\Sources\C\control.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\src\Sources\C\filter.c</name>
         </file>
         <file>
@@ -1988,6 +1991,9 @@
         </file>
         <file>
           <name>$PROJ_DIR$\src\Sources\H\common.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\src\Sources\H\control.h</name>
         </file>
         <file>
           <name>$PROJ_DIR$\src\Sources\H\filter.h</name>

@@ -65,7 +65,12 @@ void main(void)
   
   ccd_init();
   
-  CCD1.thresh=150;
+  //给初值
+  CCD1.thresh = 150;
+  CCD1.state = 0;
+  CCD1.max_angle_left = 130;
+  CCD1.max_angle_right = 50;
+  car_enable = 0;
   for(i=0;i<128;i++)
     {
         if (jbxs1[i]>=CCD1.max_voltage) CCD1.max_voltage=jbxs1[i];
@@ -88,11 +93,9 @@ void main(void)
   EnableInterrupts;  //开总中断
       
  //  电机测试
-  FTM0_C6V=0;
-  FTM0_C7V=0;
-  FTM0_C4V=0;
-  FTM0_C5V=0;
-  
+  Set_Speed(0,0);
+  speed_left = 3000;
+  speed_right = 3000;
   FTM1_C1V=920;
   
   /*strcpy(pwm1,"C4V 0200");

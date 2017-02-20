@@ -10,6 +10,7 @@
 #include "MK60N512VMD100.h "
 #include "includes.h"
 extern struct CCD CCD1;
+int16 car_enable;
 
 //-------------------------------------------------------------------------*
 //函数名: PIT0_isr                                                        *
@@ -29,6 +30,16 @@ void PIT0_isr(void)
   if (cnt == 8)
     findline(&CCD1,1);
   enable_pit_interrupt(PIT0);
+  if (car_enable)
+  {
+    Set_Speed(speed_left, speed_right);
+    Servo_Turn(Calculate_Angle(&CCD1));//计算角度并控制舵机
+  }
+  else
+  {
+    Set_Speed(0, 0);
+    Servo_Turn(90);
+  }
 }
 
 
@@ -43,28 +54,31 @@ void PIT1_isr(void)
 unsigned char get;
 uint8 bluestop;
 static char testch[]="00";
-  static  char test_time[]="00:00";
+//static  char test_time[]="00:00";
+static  char test_speed_left[]="left:0000";
+static  char test_speed_right[]="right:0000";
 
   //uint8 get;
   int j;
-static int count_time = 0;
+//static int count_time = 0;
   disable_pit_interrupt(PIT1);
   if((PIT_TFLG(1)&PIT_TFLG_TIF_MASK)!=0)
   {
     PIT_TFLG(1) |= PIT_TFLG_TIF_MASK;  //清中断标志
   }
- // 时钟测试程序
-  count_time ++;
-  if (count_time == 10)
-  {
-     count_time = 0;
-     test_time[4]++;
-     if(test_time[4]=='9'+1)
-     {
-       test_time[4] = '0';
-     }
-  }
-   LCD_P8x16Str(0,0,test_time);
+ // 速度测试显示
+ // count_time ++;
+  test_speed_left[5] = '0' + speed_left / 1000;
+  test_speed_left[6] = '0' + speed_left % 1000 / 100;
+  test_speed_left[7] = '0' + speed_left % 100 / 10;
+  test_speed_left[8] = '0' + speed_left % 10;
+  
+  test_speed_right[6] = '0' + speed_right / 1000;
+  test_speed_right[7] = '0' + speed_right % 1000 / 100;
+  test_speed_right[8] = '0' + speed_right % 100 / 10;
+  test_speed_right[9] = '0' + speed_right % 10;
+   LCD_P8x16Str(0,0,test_speed_left);
+   LCD_P8x16Str(0,2,test_speed_right);
   //gpio_ctrl(PORTA,19,0); //蓝色测试灯
   
    get=uart_re1(FreeCarsUARTPort, &bluestop);
@@ -117,13 +131,26 @@ static int count_time = 0;
   }*/
   
    //按键开关扫描控制
+  //2017-2-20 控制开车加减速
   SW_num=KPScan();
   if (SW_num == 1)
   {
-      FTM0_C6V=0;
-      FTM0_C7V=200;
-      FTM0_C4V=200;
-      FTM0_C5V=0;
+    car_enable = 1;
+  }
+  if (SW_num == 2)
+  {
+    car_enable = 0;
+  }
+  if (SW_num == 3)
+  {
+    speed_left += 50;
+    speed_right += 50;
+  }
+  if (SW_num == 4)
+  {
+    speed_left -= 50;
+    speed_right -= 50;
+    Set_Speed(speed_left, speed_right);
   }
   
  /* // 按键开关测试

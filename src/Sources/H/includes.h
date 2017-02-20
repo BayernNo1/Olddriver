@@ -29,6 +29,7 @@
 #include "ccd.h"
 #include "filter.h"
 #include "findline.h"
+#include "control.h"
 
 struct CCD {
   /*int16 right_array[10], left_array[10], angle_array[10], statearray[10]; 
@@ -44,12 +45,21 @@ struct CCD {
   int16 average;//平均值
   int16 thresh;//阈值
   int16 left, right;//左右边界
+  int16 center;//中心线位置
   int16 mistake_flag;//误判标志
   int16 max_voltage; //消除余弦效应参数的最大值
+  int16 max_angle_left;//最大左转角度
+  int16 max_angle_right; //最大右转角度
   int16 cos_array[128];//消除余弦效应的参数
   unsigned char data[128], filter_data[128];//原数据，滤波后数据
+  int16 state;//状态
 };
 
 extern uint8 BO_num[5];
 extern struct CCD CCD1;
+extern int16 barrier_flag;
+extern int16 servo;
+extern int16 Servo_Current;
+extern int16 car_enable;
+extern int16 speed_left, speed_right;
 #endif
