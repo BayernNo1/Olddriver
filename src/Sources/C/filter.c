@@ -88,4 +88,4 @@ void peakfilter(struct CCD *ccd)//, unsigned char *data)
     flag = 0;
   }
 }
-      
+/*2017年2月20日尹天宇测试github*/
